@@ -1,0 +1,104 @@
+ //assign leds to time zones. 4 leds / time zone
+  CRGB tmz1[4] = {leds[0][0], leds[0][1], leds[0][2], leds[0][3]};
+  CRGB tmz2[4] = {leds[0][4], leds[0][5], leds[0][6], leds[0][7]};
+  CRGB tmz3[4] = {leds[0][8], leds[0][9], leds[0][10], leds[0][11]};
+  CRGB tmz4[4] = {leds[0][12], leds[0][13], leds[0][14], leds[0][15]};
+  CRGB tmz5[4] = {leds[0][16], leds[0][17], leds[0][18], leds[0][19]};
+  CRGB tmz6[4] = {leds[0][20], leds[0][21], leds[0][22], leds[0][23]};
+  CRGB tmz7[4] = {leds[0][24], leds[0][25], leds[0][26], leds[0][27]};
+  CRGB tmz8[4] = {leds[0][28], leds[0][29], leds[0][30], leds[0][31]};
+  CRGB tmz9[4] = {leds[0][32], leds[0][33], leds[0][34], leds[0][35]};
+  CRGB tmz10[4] = {leds[0][36], leds[0][37], leds[0][38], leds[0][39]};
+  CRGB tmz11[4] = {leds[0][40], leds[0][41], leds[0][42], leds[0][43]};
+  CRGB tmz12[4] = {leds[0][44], leds[0][45], leds[0][46], leds[0][47]};
+  CRGB tmz13[4] = {leds[0][48], leds[0][49], leds[1][0], leds[1][1]};
+  //switch strips
+  CRGB tmz14[4] = {leds[1][2], leds[1][3], leds[1][4], leds[1][5]};
+  CRGB tmz15[4] = {leds[1][6], leds[1][7], leds[1][8], leds[1][9]};
+  CRGB tmz16[4] = {leds[1][10], leds[1][11], leds[1][12], leds[1][13]};
+  CRGB tmz17[4] = {leds[1][14], leds[1][15], leds[1][16], leds[1][17]};
+  CRGB tmz18[4] = {leds[1][18], leds[1][19], leds[1][20], leds[1][21]};
+  CRGB tmz19[4] = {leds[1][22], leds[1][23], leds[1][24], leds[1][25]};
+  CRGB tmz20[4] = {leds[1][26], leds[1][27], leds[1][28], leds[1][29]};
+  CRGB tmz21[4] = {leds[1][30], leds[1][31], leds[1][32], leds[1][33]};
+  CRGB tmz22[4] = {leds[1][34], leds[1][35], leds[1][36], leds[1][37]};
+  CRGB tmz23[4] = {leds[1][38], leds[1][39], leds[1][40], leds[1][41]};
+  CRGB tmz24[4] = {leds[1][42], leds[1][43], leds[1][44], leds[1][45]};
+
+  //put all time zones into a master time zone array
+  for(int i = 0; i < 4; i++){
+    timeZones[0][i] = tmz1[i];
+  }
+  for(int i = 0; i < 4; i++){
+    timeZones[1][i] = tmz2[i];
+  }
+  for(int i = 0; i < 4; i++){
+    timeZones[2][i] = tmz3[i];
+  }
+  for(int i = 0; i < 4; i++){
+    timeZones[3][i] = tmz4[i];
+  }
+  for(int i = 0; i < 4; i++){
+    timeZones[4][i] = tmz5[i];
+  }
+  for(int i = 0; i < 4; i++){
+    timeZones[5][i] = tmz6[i];
+  }
+  for(int i = 0; i < 4; i++){
+    timeZones[6][i] = tmz7[i];
+  }
+  for(int i = 0; i < 4; i++){
+    timeZones[7][i] = tmz8[i];
+  }
+  for(int i = 0; i < 4; i++){
+    timeZones[8][i] = tmz9[i];
+  }
+  for(int i = 0; i < 4; i++){
+    timeZones[9][i] = tmz10[i];
+  }
+  for(int i = 0; i < 4; i++){
+    timeZones[10][i] = tmz11[i];
+  }
+  for(int i = 0; i < 4; i++){
+    timeZones[11][i] = tmz12[i];
+  }
+  for(int i = 0; i < 4; i++){
+    timeZones[12][i] = tmz13[i];
+  }
+  for(int i = 0; i < 4; i++){
+    timeZones[13][i] = tmz14[i];
+  }
+  for(int i = 0; i < 4; i++){
+    timeZones[14][i] = tmz15[i];
+  }
+  for(int i = 0; i < 4; i++){
+    timeZones[15][i] = tmz16[i];
+  }
+  for(int i = 0; i < 4; i++){
+    timeZones[16][i] = tmz17[i];
+  }
+  for(int i = 0; i < 4; i++){
+    timeZones[17][i] = tmz18[i];
+  }
+  for(int i = 0; i < 4; i++){
+    timeZones[18][i] = tmz19[i];
+  }
+  for(int i = 0; i < 4; i++){
+    timeZones[19][i] = tmz20[i];
+  }
+  timeZones[20][4] = tmz21[4];
+  for(int i = 0; i < 4; i++){
+    timeZones[20][i] = tmz21[i];
+  }
+  timeZones[21][4] = tmz22[4];
+  for(int i = 0; i < 4; i++){
+    timeZones[21][i] = tmz22[i];
+  }
+  timeZones[22][4] = tmz23[4];
+  for(int i = 0; i < 4; i++){
+    timeZones[22][i] = tmz23[i];
+  }
+  timeZones[23][4] = tmz24[4];
+  for(int i = 0; i < 4; i++){
+    timeZones[23][i] = tmz24[i];
+  }

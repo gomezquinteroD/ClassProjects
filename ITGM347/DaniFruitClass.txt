@@ -1,0 +1,123 @@
+//Needs boolean, image, coors?
+class Fruit {
+  boolean grabbed;
+  boolean firstgrab = false;
+  PImage f;
+  float placeX;
+  float placeY;
+  StringList fruits;
+
+  float handLX;
+  float handLY;
+  float handRX;
+  float handRY;
+  
+  boolean locked = false;
+  float bdifx = 0.0;
+  float bdify = 0.0;
+  float fx = 1000;
+  float fy = 700;
+
+
+  Fruit() {
+    fruits = new StringList();
+    fruits.append("cherry.png");
+    grabbed = false;
+    f = loadImage(fruits.get(0));
+  }
+
+  /*void placeFruit(boolean g, SkeletonData s) {
+    handLX = s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].x*width;
+    handLY = s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].y*height;
+    handRX = s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_RIGHT].x*width;
+    handRY = s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_RIGHT].y*height;
+
+    if (g == true) {
+      image(f, handRX, handRY);
+    }
+  }*/
+
+  void fruitgrabbed() {
+    if (firstgrab == false){
+      grabbed = true;
+    }
+  }
+
+  void display(SkeletonData s) {
+    if (grabbed) {
+      locked = true;
+      handLX = s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].x*width;
+      handLY = s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].y*height;
+      handRX = s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_RIGHT].x*width;
+      handRY = s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_RIGHT].y*height;
+      if (handLX < handRX+100 && handLX > handRX-100 && handLY < handRY+100 && handLY > handRY-100){
+        locked = true;
+      }
+      else {
+        if(firstgrab == false){
+          firstgrab = true;
+          spawn();
+        }
+        locked = false;
+      }
+      if (locked && firstgrab == false){
+        fx = handRX;
+        fy = handRY;
+      }
+      image(f, fx, fy);
+    }
+  }
+  
+  void spawn(){
+    Fruit fruit = new Fruit();
+  }
+  
+} //end class
+
+/* based on mouseFunctions in Processing (drag and drop)
+  boolean locked = false;
+  float bdifx = 0.0;
+  float bdify = 0.0;
+  float fx = 1000;
+  float fy = 700;
+  image(f, fx, fy);
+  
+  when hands grab fruit
+  locked = true;
+  bdifx = handRX - fx;
+  bdify = handRY - fy;
+  
+  when hands are moving fruit
+  if (locked){
+  fx = handRX - bdifx;
+  fy = handRY - bdify;
+  }
+  
+  when hands are separated
+  locked = false;
+  
+  if (grabbed) {
+      locked = true;
+      handLX = s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].x*width;
+      handLY = s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].y*height;
+      handRX = s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_RIGHT].x*width;
+      handRY = s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_RIGHT].y*height;
+      bdifx = handRX - fx;
+      bdify = handRY - fy;
+      if (handLX < handRX+200 && handLX > handRX-200 && handLY < handRY+200 && handLY > handRY-200){
+        locked = true;
+        bdifx = handRX - fx;
+        bdify = handRY - fy;
+      }
+      else {
+        //locked = false;
+      }
+      if (locked){
+        fx = handRX - bdifx;
+        fy = handRY - bdify;
+        //image(f, fx, fy);
+      }
+      image(f, fx, fy);
+    }
+
+*/

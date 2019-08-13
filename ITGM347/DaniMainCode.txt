@@ -1,0 +1,260 @@
+import kinect4WinSDK.*;
+
+Kinect kinect;
+ArrayList <SkeletonData> bodies;
+StringList fruits;
+StringList ghosts;
+
+//PImage fruit;
+PImage basket;
+PImage handL;
+PImage handR;
+
+boolean grab;
+ArrayList fruitOs;
+Fruit fruit;
+
+//timer
+int passedTime;
+int totalT = 30;
+
+PFont f;
+
+void setup() {
+  //size(640,480);
+  size(1280,960);
+  background(21,40,135);
+  kinect = new Kinect(this);
+  smooth();
+  bodies = new ArrayList<SkeletonData>();
+  
+  /*fruitOs = new ArrayList<Fruit>();
+  for (int i = 0; i < 5; i++){
+    Fruit fruit = new Fruit();
+    fruitOs.add(fruit);
+  }*/
+  
+  handL = loadImage("leftHand.png");
+  handR = loadImage("RightHand.png"); 
+  basket = loadImage("Basket.png");
+  fruit = new Fruit();
+  
+  f = loadFont("DS-Digital-48.vlw");
+  textFont(f);
+  passedTime = 30;
+  
+  
+} //end setup
+
+void draw() {
+  background(21,40,135);
+  image(basket, 1000, 700);
+  
+  if (passedTime > 0){ //display timer while it is still going
+    passedTime = totalT - int(millis()/1000);
+    fill(255);
+    text("TIMER", 1100,60);
+    text(passedTime, 1155, 110);
+  }
+  else{ //when time is up, bring in pacman
+    //enter pacman
+  }
+  
+  for( int i = 0; i< bodies.size(); i++){ //visualize important body parts
+    SkeletonData s = bodies.get(i);
+    drawCenter(s);
+    drawHead(s);
+    drawLHand(s);
+    drawRHand(s);
+    grabFruit(s);
+    fruit.display(s);
+  }
+
+} //end draw
+
+//grab fruit. **Basket Coors are (1000, 700)
+void grabFruit(SkeletonData s){
+  float handLX = s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].x*width;
+  float handLY = s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].y*height;
+  float handRX = s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_RIGHT].x*width;
+  float handRY = s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_RIGHT].y*height;
+  
+  //check if hands are on basket
+  if ( handLX > 950 && handLX < 1050 && handLY > 650 && handLY < 750 && handRX > 950 && handRX < 1050 && handRY > 650 && handRY < 750){ //if left hand's coors are near basket
+    fruit.fruitgrabbed();
+  }//end handLX if
+
+}
+
+//Kinect functions -----------------------------------------------
+void drawLHand(SkeletonData s){ //tracks head and draws yellowish circle on the head
+  noStroke();
+  fill(208,65,243);
+  if (s.skeletonPositionTrackingState[Kinect.NUI_SKELETON_POSITION_HAND_LEFT] != Kinect.NUI_SKELETON_POSITION_NOT_TRACKED){
+    image(handL, s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].x*width, s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].y*height);
+
+}
+}
+
+void drawRHand(SkeletonData s){ //tracks head and draws yellowish circle on the head
+  noStroke();
+  fill(208,65,243);
+  if (s.skeletonPositionTrackingState[Kinect.NUI_SKELETON_POSITION_HAND_RIGHT] != Kinect.NUI_SKELETON_POSITION_NOT_TRACKED){
+    image(handR, s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_RIGHT].x*width, s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_RIGHT].y*height);
+
+}
+}
+
+void drawHead(SkeletonData s){ //tracks head and draws yellowish circle on the head
+  noStroke();
+  fill(255,200,0);
+  if (s.skeletonPositionTrackingState[Kinect.NUI_SKELETON_POSITION_HEAD] != Kinect.NUI_SKELETON_POSITION_NOT_TRACKED){
+    ellipse(s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HEAD].x*width, s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HEAD].y*height, 80,80);
+  }
+}
+
+void drawCenter(SkeletonData s){ //tracks head and draws yellowish circle on the head
+  noStroke();
+  fill(255,0,0);
+  if (s.skeletonPositionTrackingState[Kinect.NUI_SKELETON_POSITION_HIP_CENTER] != Kinect.NUI_SKELETON_POSITION_NOT_TRACKED){
+    ellipse(s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HIP_CENTER].x*width, s.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HIP_CENTER].y*height, 40,40);
+  }
+}
+
+void drawPosition(SkeletonData _s){ //draws body's center
+  noStroke();
+  fill(255, 0, 0); //red
+  ellipse( _s.position.x * width / 2, _s.position.y * height / 2, 40, 40);
+  //String s1 = str(_s.dwTrackingID);
+  //text(s1, _s.position.x * width / 2, _s.position.y * height /2);
+}//end drawPosition
+
+void drawSkeleton(SkeletonData _s){ //draw full skeleton
+  // Body
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_HEAD, 
+  Kinect.NUI_SKELETON_POSITION_SHOULDER_CENTER);
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_SHOULDER_CENTER, 
+  Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT);
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_SHOULDER_CENTER, 
+  Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT);
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_SHOULDER_CENTER, 
+  Kinect.NUI_SKELETON_POSITION_SPINE);
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT, 
+  Kinect.NUI_SKELETON_POSITION_SPINE);
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT, 
+  Kinect.NUI_SKELETON_POSITION_SPINE);
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_SPINE, 
+  Kinect.NUI_SKELETON_POSITION_HIP_CENTER);
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_HIP_CENTER, 
+  Kinect.NUI_SKELETON_POSITION_HIP_LEFT);
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_HIP_CENTER, 
+  Kinect.NUI_SKELETON_POSITION_HIP_RIGHT);
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_HIP_LEFT, 
+  Kinect.NUI_SKELETON_POSITION_HIP_RIGHT);
+  
+  // Left Arm
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT, 
+  Kinect.NUI_SKELETON_POSITION_ELBOW_LEFT);
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_ELBOW_LEFT, 
+  Kinect.NUI_SKELETON_POSITION_WRIST_LEFT);
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_WRIST_LEFT, 
+  Kinect.NUI_SKELETON_POSITION_HAND_LEFT);
+
+  // Right Arm
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT, 
+  Kinect.NUI_SKELETON_POSITION_ELBOW_RIGHT);
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_ELBOW_RIGHT, 
+  Kinect.NUI_SKELETON_POSITION_WRIST_RIGHT);
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_WRIST_RIGHT, 
+  Kinect.NUI_SKELETON_POSITION_HAND_RIGHT);
+
+  // Left Leg
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_HIP_LEFT, 
+  Kinect.NUI_SKELETON_POSITION_KNEE_LEFT);
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_KNEE_LEFT, 
+  Kinect.NUI_SKELETON_POSITION_ANKLE_LEFT);
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_ANKLE_LEFT, 
+  Kinect.NUI_SKELETON_POSITION_FOOT_LEFT);
+
+  // Right Leg
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_HIP_RIGHT, 
+  Kinect.NUI_SKELETON_POSITION_KNEE_RIGHT);
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_KNEE_RIGHT, 
+  Kinect.NUI_SKELETON_POSITION_ANKLE_RIGHT);
+  DrawBone(_s, 
+  Kinect.NUI_SKELETON_POSITION_ANKLE_RIGHT, 
+  Kinect.NUI_SKELETON_POSITION_FOOT_RIGHT);
+}//end drawSkeleton
+
+void DrawBone(SkeletonData _s, int _j1, int _j2){
+  noFill();
+  stroke(255, 255, 0); //yellow lines
+  if( _s.skeletonPositionTrackingState[_j1] != Kinect.NUI_SKELETON_POSITION_NOT_TRACKED &&
+    _s.skeletonPositionTrackingState[_j2] != Kinect.NUI_SKELETON_POSITION_NOT_TRACKED){
+    //if two joints are being tracked, draw a line between the two joints
+      line( _s.skeletonPositions[_j1].x * width/2,
+            _s.skeletonPositions[_j1].y * width/2,
+            _s.skeletonPositions[_j2].x * width/2,
+            _s.skeletonPositions[_j2].y * width/2);
+  } //end if
+}//end DrawBone
+
+void appearEvent(SkeletonData _s){ //when bodies appear, add them to bodies ArrayList
+  if( _s.trackingState == Kinect.NUI_SKELETON_NOT_TRACKED){ //if body not tracking, do nothing
+    return;
+  }//end if
+  synchronized(bodies) {
+    bodies.add( _s); //add bodies that are tracking
+  }//end synchronized
+  
+}//end appearEvent
+
+void disappearEvent(SkeletonData _s){ //if body disappears, remove from bodies ArrayList
+  synchronized(bodies){
+    for (int i = bodies.size() - 1; i >= 0; i--){
+      if ( _s.dwTrackingID == bodies.get(i).dwTrackingID){
+        bodies.remove(i);
+      } //end if
+    } //end for loop
+  }//end synchronized
+  
+}//end disappearEvent
+
+void moveEvent(SkeletonData _b, SkeletonData _a){
+  if (_a.trackingState == Kinect.NUI_SKELETON_NOT_TRACKED) //if no body tracked, do nothing
+  {
+    return;
+  }
+  synchronized(bodies) { //for every body tracked, compare states, update ArrayList as necessary
+    for (int i=bodies.size ()-1; i>=0; i--) 
+    {
+      if (_b.dwTrackingID == bodies.get(i).dwTrackingID) 
+      {
+        bodies.get(i).copy(_a);
+        break;
+      } //end if
+    } //end for
+  } //end synchronized
+  
+} //end moveEvent
